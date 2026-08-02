@@ -10,18 +10,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.0'
 
-      - name: Bootstrap Flutter Project
-        run: |
-          flutter create --project-name bluetooth_chat .
-          flutter pub add flutter_bluetooth_serial permission_handler
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
