@@ -1,0 +1,30 @@
+name: Build Flutter APK
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+
+      - name: Bootstrap Flutter Project
+        run: |
+          flutter create --project-name bluetooth_chat .
+          flutter pub add flutter_bluetooth_serial permission_handler
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: BluetoothChatApp
+          path: build/app/outputs/flutter-apk/app-release.apk
